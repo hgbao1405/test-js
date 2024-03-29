@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="d-flex">
+        <div class="slider-container">
+            <div id="canvas-container">
+                <!-- Thẻ div để chứa canvas -->
+            </div>
+            <input type="range" min="0" max="360" value="0" class="slider" id="y-slider">
+        </div>
+        <input type="range" min="0" max="360" value="0" class="slider vertical" id="x-slider">
+    </div>
+    <p type="text" id="index"></p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script> <!-- Đường dẫn đến file script.js chứa mã JavaScript Three.js -->
+</body>
+</html>

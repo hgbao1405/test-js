@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor.js Example</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest/dist/editorjs.min.css"
+    />
+  </head>
+  <body>
+    <style>
+      .edit-box {
+        width: 50%;
+        height: 100%;
+        border: 1px solid #ccc;
+      }
+    </style>
+
+    <button class="save-btn" onclick="save()">save</button>
+    <div style="display: flex; justify-content: center">
+      <div class="edit-box">
+        <div id="editorjs"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script>
+      var editor;
+      document.addEventListener("DOMContentLoaded", function () {
+        editor = new EditorJS({
+          holder: "editorjs",
+          tools: {
+            paragraph: {
+              class: Paragraph,
+              inlineToolbar: true,
+            },
+            header: {
+              class: Header,
+              inlineToolbar: true,
+              config: {
+                placeholder: "Enter a header",
+                levels: [1, 2, 3, 4],
+                defaultLevel: 2,
+              },
+            },
+            list: {
+              class: List,
+              inlineToolbar: true,
+            },
+            image: {
+              class: ImageTool,
+              config: {
+                uploader: {
+                  uploadByFile(file) {
+                    // Your image upload logic here
+                    return Promise.resolve({
+                      success: 1,
+                      file: { url: "example.jpg" },
+                    });
+                  },
+                  uploadByUrl(url) {
+                    // Your image upload by URL logic here
+                    return Promise.resolve({ success: 1, file: { url: url } });
+                  },
+                },
+              },
+            },
+            embed: Embed,
+            quote: Quote,
+            delimiter: Delimiter,
+            warning: Warning,
+            code: CodeTool,
+            checklist: Checklist,
+            table: Table,
+          },
+        });
+      });
+      var save = function () {
+        editor
+          .save()
+          .then((outputData) => {
+            console.log("Article data: ", outputData);
+          })
+          .catch((error) => {
+            console.log("Saving failed: ", error);
+          });
+      };
+    </script>
+  </body>
+</html>

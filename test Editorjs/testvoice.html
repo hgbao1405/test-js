@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Recognition</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div ng-app="MyApp" ng-controller="myCtrl">
+      <p>Input something in the input box:</p>
+      <p>
+        Name :
+        <input
+          type="text"
+          ng-model="infUser.LastName"
+          placeholder="Enter name here"
+        />
+
+        <button voice-recognition ng-model="infUser.LastName">start</button>
+      </p>
+      <p>
+        Name :
+        <input
+          type="text"
+          ng-model="infUser.LastName2"
+          placeholder="Enter name here"
+        />
+
+        <button voice-recognition ng-model="infUser.LastName2">start</button>
+      </p>
+      <h1>Hello {{infUser.LastName}}</h1>
+    </div>
+
+    <script>
+      var recognition; // Biến global để lưu trữ đối tượng nhận dạng giọng nói
+      var spokenText = ""; // Biến để lưu trữ văn bản được nhận dạng từ giọng nói
+
+      var app = angular.module("MyApp", []);
+      app.directive("voiceRecognition", function () {
+        return {
+          restrict: "AE",
+          require: "ngModel",
+          link: function (scope, element, attrs, ngModelCtrl) {
+            console.log(ngModelCtrl);
+            if ("webkitSpeechRecognition" in window) {
+              var spokenText = "";
+              var recognition = new webkitSpeechRecognition();
+              recognition.continuous = false;
+              recognition.interimResults = false;
+
+              recognition.onstart = function () {};
+
+              recognition.onend = function () {
+                console.log("Spoken text:", spokenText);
+              };
+
+              recognition.onresult = function (event) {
+                var transcript = event.results[0][0].transcript;
+                spokenText = transcript;
+                if (spokenText != "") {
+                  ngModelCtrl.$setViewValue(transcript);
+
+                  ngModelCtrl.$render();
+                  // Cập nhật giá trị trong ng-model
+                  console.log(ngModelCtrl);
+                }
+              };
+
+              element.on("mousedown", function () {
+                scope.startRecognition(recognition);
+                element.css("color", "red");
+              });
+
+              element.on("mouseup", function () {
+                scope.stopRecognition(recognition);
+                element.css("color", "");
+              });
+              element.on("mouseout", function () {
+                scope.stopRecognition(recognition);
+                element.css("color", "");
+              });
+            }
+
+            scope.startRecognition = function (recognition) {
+              if (recognition) {
+                recognition.start();
+              }
+            };
+
+            scope.stopRecognition = function (recognition) {
+              if (recognition) {
+                recognition.stop();
+              }
+            };
+          },
+        };
+      });
+      app.controller("myCtrl", function ($scope) {
+        $scope.infUser = {
+          LastName: "abc",
+        };
+      });
+    </script>
+  </body>
+</html>
